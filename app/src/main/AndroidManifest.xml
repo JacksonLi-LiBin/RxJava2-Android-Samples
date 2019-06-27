@@ -25,8 +25,17 @@
             android:name=".ui.networking.NetworkingActivity"
             android:label="@string/networking" />
         <activity
+            android:name=".ui.cache.CacheExampleActivity"
+            android:label="@string/cache" />
+        <activity
             android:name=".ui.rxbus.RxBusActivity"
             android:label="@string/rx_bus" />
+        <activity
+            android:name=".ui.pagination.PaginationActivity"
+            android:label="@string/pagination" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:label="@string/search" />
         <activity
             android:name=".ui.operators.SimpleExampleActivity"
             android:label="@string/simple" />
@@ -114,6 +123,21 @@
         <activity
             android:name=".ui.operators.ThrottleFirstExampleActivity"
             android:label="@string/throttle_first" />
+        <activity
+            android:name=".ui.operators.DelayExampleActivity"
+            android:label="@string/delay" />
+        <activity
+            android:name=".ui.compose.ComposeOperatorExampleActivity"
+            android:label="@string/compose" />
+        <activity
+            android:name=".ui.operators.SwitchMapExampleActivity"
+            android:label="@string/switch_map" />
+
+        <activity android:name=".ui.operators.TakeWhileExampleActivity"
+            android:label="@string/take_while"/>
+
+        <activity android:name=".ui.operators.TakeUntilExampleActivity"
+            android:label="@string/take_until"/>
     </application>
 
 </manifest>

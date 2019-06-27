@@ -23,18 +23,18 @@ public class Utils {
         List<User> userList = new ArrayList<>();
 
         User userOne = new User();
-        userOne.firstName = "Amit";
-        userOne.lastName = "Shekhar";
+        userOne.firstname = "Amit";
+        userOne.lastname = "Shekhar";
         userList.add(userOne);
 
         User userTwo = new User();
-        userTwo.firstName = "Manish";
-        userTwo.lastName = "Kumar";
+        userTwo.firstname = "Manish";
+        userTwo.lastname = "Kumar";
         userList.add(userTwo);
 
         User userThree = new User();
-        userThree.firstName = "Sumit";
-        userThree.lastName = "Kumar";
+        userThree.firstname = "Sumit";
+        userThree.lastname = "Kumar";
         userList.add(userThree);
 
         return userList;
@@ -68,13 +68,18 @@ public class Utils {
 
         for (ApiUser apiUser : apiUserList) {
             User user = new User();
-            user.firstName = apiUser.firstname;
-            user.lastName = apiUser.lastname;
+            user.firstname = apiUser.firstname;
+            user.lastname = apiUser.lastname;
             userList.add(user);
         }
 
         return userList;
     }
+
+    public static List<ApiUser> convertApiUserListToApiUserList(List<ApiUser> apiUserList) {
+      return apiUserList;
+    }
+
 
     public static List<User> getUserListWhoLovesCricket() {
 
@@ -82,14 +87,14 @@ public class Utils {
 
         User userOne = new User();
         userOne.id = 1;
-        userOne.firstName = "Amit";
-        userOne.lastName = "Shekhar";
+        userOne.firstname = "Amit";
+        userOne.lastname = "Shekhar";
         userList.add(userOne);
 
         User userTwo = new User();
         userTwo.id = 2;
-        userTwo.firstName = "Manish";
-        userTwo.lastName = "Kumar";
+        userTwo.firstname = "Manish";
+        userTwo.lastname = "Kumar";
         userList.add(userTwo);
 
         return userList;
@@ -102,14 +107,14 @@ public class Utils {
 
         User userOne = new User();
         userOne.id = 1;
-        userOne.firstName = "Amit";
-        userOne.lastName = "Shekhar";
+        userOne.firstname = "Amit";
+        userOne.lastname = "Shekhar";
         userList.add(userOne);
 
         User userTwo = new User();
         userTwo.id = 3;
-        userTwo.firstName = "Sumit";
-        userTwo.lastName = "Kumar";
+        userTwo.firstname = "Sumit";
+        userTwo.lastname = "Kumar";
         userList.add(userTwo);
 
         return userList;

@@ -1,10 +1,11 @@
 package com.rxjava2.android.samples.ui.networking;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 import com.rxjava2.android.samples.R;
@@ -40,10 +41,9 @@ public class NetworkingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_networking);
     }
 
-    /************************************
-     * map operator start
-     ************************************/
-
+    /**
+     * Map Operator Example
+     */
     public void map(View view) {
         Rx2AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAnUser/{userId}")
                 .addPathParameter("userId", "1")
@@ -53,7 +53,7 @@ public class NetworkingActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Function<ApiUser, User>() {
                     @Override
-                    public User apply(ApiUser apiUser) throws Exception {
+                    public User apply(ApiUser apiUser) {
                         // here we get ApiUser from server
                         User user = new User(apiUser);
                         // then by converting, we are returning user
@@ -84,39 +84,41 @@ public class NetworkingActivity extends AppCompatActivity {
     }
 
 
-    /************************************
-     * zip operator start
-     *********************************/
+    /**
+     * zip Operator Example
+     */
 
-    /*
-    * This observable return the list of User who loves cricket
-    */
+    /**
+     * This observable return the list of User who loves cricket
+     */
     private Observable<List<User>> getCricketFansObservable() {
         return Rx2AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllCricketFans")
                 .build()
-                .getObjectListObservable(User.class);
+                .getObjectListObservable(User.class)
+                .subscribeOn(Schedulers.io());
     }
 
     /*
-    * This observable return the list of User who loves Football
-    */
+     * This observable return the list of User who loves Football
+     */
     private Observable<List<User>> getFootballFansObservable() {
         return Rx2AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllFootballFans")
                 .build()
-                .getObjectListObservable(User.class);
+                .getObjectListObservable(User.class)
+                .subscribeOn(Schedulers.io());
     }
 
     /*
-    * This do the complete magic, make both network call
-    * and then returns the list of user who loves both
-    * Using zip operator to get both response at a time
-    */
+     * This do the complete magic, make both network call
+     * and then returns the list of user who loves both
+     * Using zip operator to get both response at a time
+     */
     private void findUsersWhoLovesBoth() {
         // here we are using zip operator to combine both request
         Observable.zip(getCricketFansObservable(), getFootballFansObservable(),
                 new BiFunction<List<User>, List<User>, List<User>>() {
                     @Override
-                    public List<User> apply(List<User> cricketFans, List<User> footballFans) throws Exception {
+                    public List<User> apply(List<User> cricketFans, List<User> footballFans) {
                         List<User> userWhoLovesBoth =
                                 filterUserWhoLovesBoth(cricketFans, footballFans);
                         return userWhoLovesBoth;
@@ -153,13 +155,13 @@ public class NetworkingActivity extends AppCompatActivity {
 
     private List<User> filterUserWhoLovesBoth(List<User> cricketFans, List<User> footballFans) {
         List<User> userWhoLovesBoth = new ArrayList<>();
-        for (User cricketFan : cricketFans) {
-            for (User footballFan : footballFans) {
-                if (cricketFan.id == footballFan.id) {
-                    userWhoLovesBoth.add(cricketFan);
-                }
+
+        for (User footballFan : footballFans) {
+            if (cricketFans.contains(footballFan)) {
+                userWhoLovesBoth.add(footballFan);
             }
         }
+
         return userWhoLovesBoth;
     }
 
@@ -168,9 +170,10 @@ public class NetworkingActivity extends AppCompatActivity {
         findUsersWhoLovesBoth();
     }
 
-    /************************************
-     * flatMap and filter operator start
-     ************************************/
+
+    /**
+     * flatMap and filter Operators Example
+     */
 
     private Observable<List<User>> getAllMyFriendsObservable() {
         return Rx2AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllFriends/{userId}")
@@ -183,13 +186,13 @@ public class NetworkingActivity extends AppCompatActivity {
         getAllMyFriendsObservable()
                 .flatMap(new Function<List<User>, ObservableSource<User>>() { // flatMap - to return users one by one
                     @Override
-                    public ObservableSource<User> apply(List<User> usersList) throws Exception {
+                    public ObservableSource<User> apply(List<User> usersList) {
                         return Observable.fromIterable(usersList); // returning user one by one from usersList.
                     }
                 })
                 .filter(new Predicate<User>() {
                     @Override
-                    public boolean test(User user) throws Exception {
+                    public boolean test(User user) {
                         // filtering user who follows me.
                         return user.isFollowing;
                     }
@@ -220,15 +223,16 @@ public class NetworkingActivity extends AppCompatActivity {
                 });
     }
 
-    /************************************
-     * take operator start
-     ************************************/
+
+    /**
+     * take Operator Example
+     */
 
     public void take(View view) {
         getUserListObservable()
                 .flatMap(new Function<List<User>, ObservableSource<User>>() { // flatMap - to return users one by one
                     @Override
-                    public ObservableSource<User> apply(List<User> usersList) throws Exception {
+                    public ObservableSource<User> apply(List<User> usersList) {
                         return Observable.fromIterable(usersList); // returning user one by one from usersList.
                     }
                 })
@@ -260,22 +264,21 @@ public class NetworkingActivity extends AppCompatActivity {
     }
 
 
-    /************************************
-     * flatMap operator start
-     ************************************/
-
+    /**
+     * flatMap Operator Example
+     */
 
     public void flatMap(View view) {
         getUserListObservable()
                 .flatMap(new Function<List<User>, ObservableSource<User>>() { // flatMap - to return users one by one
                     @Override
-                    public ObservableSource<User> apply(List<User> usersList) throws Exception {
+                    public ObservableSource<User> apply(List<User> usersList) {
                         return Observable.fromIterable(usersList); // returning user one by one from usersList.
                     }
                 })
                 .flatMap(new Function<User, ObservableSource<UserDetail>>() {
                     @Override
-                    public ObservableSource<UserDetail> apply(User user) throws Exception {
+                    public ObservableSource<UserDetail> apply(User user) {
                         // here we get the user one by one
                         // and returns corresponding getUserDetailObservable
                         // for that userId
@@ -308,9 +311,9 @@ public class NetworkingActivity extends AppCompatActivity {
                 });
     }
 
-    /************************************
-     * flatMapWithZip operator start
-     ************************************/
+    /**
+     * flatMapWithZip Operator Example
+     */
 
     private Observable<List<User>> getUserListObservable() {
         return Rx2AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
@@ -331,13 +334,13 @@ public class NetworkingActivity extends AppCompatActivity {
         getUserListObservable()
                 .flatMap(new Function<List<User>, ObservableSource<User>>() { // flatMap - to return users one by one
                     @Override
-                    public ObservableSource<User> apply(List<User> usersList) throws Exception {
+                    public ObservableSource<User> apply(List<User> usersList) {
                         return Observable.fromIterable(usersList); // returning user one by one from usersList.
                     }
                 })
                 .flatMap(new Function<User, ObservableSource<Pair<UserDetail, User>>>() {
                     @Override
-                    public ObservableSource<Pair<UserDetail, User>> apply(User user) throws Exception {
+                    public ObservableSource<Pair<UserDetail, User>> apply(User user) {
                         // here we get the user one by one and then we are zipping
                         // two observable - one getUserDetailObservable (network call to get userDetail)
                         // and another Observable.just(user) - just to emit user
@@ -345,7 +348,7 @@ public class NetworkingActivity extends AppCompatActivity {
                                 Observable.just(user),
                                 new BiFunction<UserDetail, User, Pair<UserDetail, User>>() {
                                     @Override
-                                    public Pair<UserDetail, User> apply(UserDetail userDetail, User user) throws Exception {
+                                    public Pair<UserDetail, User> apply(UserDetail userDetail, User user) {
                                         // runs when network call completes
                                         // we get here userDetail for the corresponding user
                                         return new Pair<>(userDetail, user); // returning the pair(userDetail, user)
